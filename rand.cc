@@ -12,6 +12,10 @@
 
 #include <pthread.h>
 
+void* MinProc(void*) {
+    for(;;);
+    return NULL;
+}
 void* MaxProc(void*) {
     while (1) {
         long x = rand() % 100;
@@ -35,8 +39,8 @@ void* MaxProc(void*) {
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 4) {
-        printf("Use %s --conf=conf_path m c\n", argv[0]);
+    if (argc < 5) {
+        printf("Use %s --conf=conf_path mem min_cpu max_cpu\n", argv[0]);
         return 1;
     }
     srand(time(NULL));
@@ -49,9 +53,13 @@ int main(int argc, char* argv[]) {
 
     char* buffer_vm = new char[(rand() % mem) * 1024L * 1024 * 1024];
 
-    int cpu = atoi(argv[3]);
+    int min_cpu = atoi(argv[3]);
+    int max_cpu = atoi(argv[4]);
     pthread_t tid;
-    for (int i = 0; i < cpu; i++) {
+    for(int i = 0; i < min_cpu; i++) {
+        pthread_create(&tid, NULL, MinProc, NULL);
+    }
+    for (int i = min_cpu; i < max_cpu; i++) {
         pthread_create(&tid, NULL, MaxProc, NULL);
     }
     while (1) sleep(1);
