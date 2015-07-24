@@ -12,12 +12,6 @@
 
 #include <pthread.h>
 
-void* MinProc(void*) {
-    for (int i = 0; ; i++) {
-         i = rand();
-    }
-    return NULL;
-}
 void* MaxProc(void*) {
     while (1) {
         long x = rand() % 100;
@@ -45,6 +39,7 @@ int main(int argc, char* argv[]) {
         printf("Use %s --conf=conf_path m c\n", argv[0]);
         return 1;
     }
+    srand(time(NULL));
     long mem = atoi(argv[2]);
     long mem_G = mem + (rand() % mem);
     long mem_M = rand() % 1024;
